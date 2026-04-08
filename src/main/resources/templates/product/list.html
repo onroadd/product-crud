@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{fragments/layout :: header}">
 </head>
 <body>
@@ -23,6 +24,11 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
 
+        <!-- User Info -->
+        <div class="mb-3 text-muted">
+            <small>Login sebagai: <strong sec:authentication="name" class="text-primary"></strong></small>
+        </div>
+
         <!-- Product Count -->
         <p class="text-muted">
             Total produk: <strong th:text="${#lists.size(products)}">0</strong>
@@ -39,6 +45,8 @@
                         <th>Harga</th>
                         <th>Stok</th>
                         <th>Status</th>
+                        <th>Creator</th>
+                        <th>Updater</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -53,6 +61,8 @@
                             <span th:if="${product.active}" class="badge bg-success">Aktif</span>
                             <span th:unless="${product.active}" class="badge bg-danger">Tidak Aktif</span>
                         </td>
+                        <td th:text="${product.createdBy ?: '-'}">-</td>
+                        <td th:text="${product.updatedBy ?: '-'}">-</td>
                         <td>
                             <a th:href="@{/products/{id}(id=${product.id})}" class="btn btn-info btn-sm">Detail</a>
                             <a th:href="@{/products/{id}/edit(id=${product.id})}" class="btn btn-warning btn-sm">Edit</a>

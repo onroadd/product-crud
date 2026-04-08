@@ -33,6 +33,13 @@ public class Product {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate createdAt;
 
+    // Field untuk tracking siapa yang melakukan operasi CRUD
+    @Column(length = 50)
+    private String createdBy;
+
+    @Column(length = 50)
+    private String updatedBy;
+
     public Product() {
     }
 
@@ -110,5 +117,23 @@ public class Product {
 
     public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
+    }
+
+    // Getter dan Setter untuk createdBy
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    // Getter dan Setter untuk updatedBy
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
     }
 }
