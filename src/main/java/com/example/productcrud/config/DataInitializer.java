@@ -15,7 +15,6 @@ public class DataInitializer {
     @Bean
     public CommandLineRunner initProducts(ProductRepository productRepository) {
         return args -> {
-            // Only initialize if no products exist
             if (productRepository.count() == 0) {
                 
                 // Create sample products

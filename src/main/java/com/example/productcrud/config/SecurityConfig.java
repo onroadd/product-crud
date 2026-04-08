@@ -1,6 +1,6 @@
 package com.example.productcrud.config;
 
-import com.example.productcrud.security.CustomUserDetailsService;
+import com.example.productcrud.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,15 +11,22 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    private final AuthenticatedUserRedirectFilter authenticatedUserRedirectFilter;
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService) {
+    public SecurityConfig(CustomUserDetailsService userDetailsService, 
+                         CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler,
+                         AuthenticatedUserRedirectFilter authenticatedUserRedirectFilter) {
         this.userDetailsService = userDetailsService;
+        this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
+        this.authenticatedUserRedirectFilter = authenticatedUserRedirectFilter;
     }
 
     @Bean
@@ -48,12 +55,14 @@ public class SecurityConfig {
                 .requestMatchers("/products/new", "/products/*/edit", "/products/*/delete", "/products/save").authenticated()
                 .anyRequest().authenticated()
             )
+            .addFilterBefore(authenticatedUserRedirectFilter, UsernamePasswordAuthenticationFilter.class)
             .formLogin(form -> form
                 .loginPage("/auth/login")
                 .loginProcessingUrl("/auth/login")
                 .defaultSuccessUrl("/products", true)
                 .failureUrl("/auth/login?error=true")
                 .permitAll()
+                .successHandler(customAuthenticationSuccessHandler)
             )
             .logout(logout -> logout
                 .logoutUrl("/logout")

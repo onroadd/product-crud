@@ -1,4 +1,4 @@
-package com.example.productcrud.security;
+package com.example.productcrud.service;
 
 import com.example.productcrud.model.User;
 import java.util.Collection;
