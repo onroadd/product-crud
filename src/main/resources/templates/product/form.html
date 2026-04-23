@@ -42,37 +42,44 @@
                                 placeholder="Masukkan harga produk" required>
                      </div>
 
-                    <!-- Stok -->
-                    <div class="mb-3">
-                        <label for="stock" class="form-label">Stok</label>
-                        <input type="number" class="form-control" id="stock" th:field="*{stock}"
-                               min="0" placeholder="Masukkan jumlah stok" required>
-                    </div>
+                     <!-- Stok -->
+                     <div class="mb-3">
+                         <label for="stock" class="block text-sm font-medium text-gray-700 mb-2">Stok</label>
+                         <input type="number" class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" 
+                                id="stock" th:field="*{stock}"
+                                min="0" placeholder="Masukkan jumlah stok" required>
+                     </div>
 
-                    <!-- Deskripsi -->
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Deskripsi</label>
-                        <textarea class="form-control" id="description" th:field="*{description}"
-                                  rows="3" placeholder="Masukkan deskripsi produk"></textarea>
-                    </div>
+                     <!-- Deskripsi -->
+                     <div class="mb-3">
+                         <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
+                         <textarea class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" 
+                                   id="description" th:field="*{description}"
+                                   rows="3" placeholder="Masukkan deskripsi produk"></textarea>
+                     </div>
 
-                    <!-- Produk Aktif -->
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="active" th:field="*{active}">
-                        <label class="form-check-label" for="active">Produk Aktif</label>
-                    </div>
+                     <!-- Produk Aktif -->
+                     <div class="mb-3 flex items-center">
+                         <input type="checkbox" class="mr-2" id="active" th:field="*{active}">
+                         <label for="active" class="text-gray-700">Produk Aktif</label>
+                     </div>
 
-                    <!-- Tanggal Dibuat -->
-                    <div class="mb-3">
-                        <label for="createdAt" class="form-label">Tanggal Dibuat</label>
-                        <input type="date" class="form-control" id="createdAt" th:field="*{createdAt}" required>
-                    </div>
+                     <!-- Tanggal Dibuat -->
+                     <div class="mb-3">
+                         <label for="createdAt" class="block text-sm font-medium text-gray-700 mb-2">Tanggal Dibuat</label>
+                         <input type="date" class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" 
+                                id="createdAt" th:field="*{createdAt}" required>
+                     </div>
 
-                    <!-- Buttons -->
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary">Simpan Produk</button>
-                        <a th:href="@{/products}" class="btn btn-secondary">Batal</a>
-                    </div>
+                     <!-- Buttons -->
+                     <div class="flex gap-2">
+                         <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                             Simpan Produk
+                         </button>
+                         <a th:href="@{/products}" class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors">
+                             Batal
+                         </a>
+                     </div>
 
                 </form>
             </div>
