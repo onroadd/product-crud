@@ -1,37 +1,17 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f8f9fa;
+    background-color: #f9fafb;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
-.container {
-    flex: 1;
+/* Dropdown menu functionality for navbar */
+#dropdownMenu {
+    display: none;
 }
 
-.navbar-brand {
-    font-weight: 700;
+#dropdownMenu.show {
+    display: block;
 }
 
-.table th {
-    vertical-align: middle;
-}
-
-.table td {
-    vertical-align: middle;
-}
-
-.card {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border: none;
-    border-radius: 8px;
-}
-
-.btn-sm {
-    margin-right: 2px;
-}
-
-.badge {
-    font-size: 0.85em;
-}
