@@ -30,7 +30,14 @@ public class CategoryService {
      */
     public Optional<Category> findByIdAndUser(Long id, User user) {
         return categoryRepository.findById(id)
-                .filter(cat -> cat.getUser().getId().equals(user.getId()));
+                .filter(cat -> cat.getUser() != null && cat.getUser().getId().equals(user.getId()));
+    }
+
+    /**
+     * Get category by ID (without user check - for internal use)
+     */
+    public Optional<Category> findById(Long id) {
+        return categoryRepository.findById(id);
     }
 
     /**
@@ -42,12 +49,11 @@ public class CategoryService {
         
         // Validate unique name per user
         if (category.getName() != null && category.getName().trim().length() > 0) {
-            boolean exists = categoryRepository.existsByNameAndUser(
-                category.getName().trim(), user
-            );
-            if (exists && category.getId() == null) {
+            String normalizedName = category.getName().trim();
+            boolean exists = categoryRepository.existsByNameAndUser(normalizedName, user);
+            if (exists && (category.getId() == null)) {
                 throw new IllegalArgumentException(
-                    "Category dengan nama '" + category.getName() + "' sudah ada untuk user Anda"
+                    "Category dengan nama '" + normalizedName + "' sudah ada untuk user Anda"
                 );
             }
         }
@@ -69,6 +75,8 @@ public class CategoryService {
         Category category = categoryOpt.get();
         
         // Check if category is used in any products
+        // Note: category.getProducts() may be lazy-loaded, so use count query if needed
+        // For now, we'll check size of collection (may trigger lazy load)
         long productCount = category.getProducts() != null ? category.getProducts().size() : 0;
         if (productCount > 0) {
             throw new IllegalStateException(
@@ -77,12 +85,5 @@ public class CategoryService {
         }
         
         categoryRepository.delete(category);
-    }
-
-    /**
-     * Get category by ID without user check (for internal use)
-     */
-    public Optional<Category> findById(Long id) {
-        return categoryRepository.findById(id);
     }
 }

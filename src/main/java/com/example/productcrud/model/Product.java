@@ -17,9 +17,8 @@ public class Product {
     @Column(nullable = false, length = 200)
     private String name;
 
-    // Many-to-one relationship with Category
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(length = 50)
     private Category category;
 
     private long price;
