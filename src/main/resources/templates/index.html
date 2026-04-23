@@ -6,16 +6,16 @@
 <body>
     <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
-    <div class="container">
-        <div class="row justify-content-center mt-5">
-            <div class="col-md-8 text-center">
-                <h1 class="display-4 mb-4">Selamat Datang di Product CRUD</h1>
-                <p class="lead mb-4">
+    <div class="max-w-7xl mx-auto px-4 py-12">
+        <div class="flex justify-center">
+            <div class="w-full max-w-2xl text-center">
+                <h1 class="text-4xl font-bold mb-4 text-gray-800">Selamat Datang di Product CRUD</h1>
+                <p class="text-lg mb-4 text-gray-600">
                     Aplikasi manajemen produk sederhana untuk praktikum JPA Fundamentals.
                     Saat ini data disimpan di dalam memori (ArrayList). Pada praktikum berikutnya,
                     Anda akan menambahkan JPA untuk menyimpan data ke database.
                 </p>
-                <a th:href="@{/products}" class="btn btn-primary btn-lg">
+                <a th:href="@{/products}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors inline-block">
                     Lihat Daftar Produk
                 </a>
             </div>

@@ -29,6 +29,9 @@ dependencies {
     // Load .env file
     implementation 'me.paulschwarz:spring-dotenv:4.0.0'
 
+    // Swagger/OpenAPI UI (commented - version compatibility issue)
+    // implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }

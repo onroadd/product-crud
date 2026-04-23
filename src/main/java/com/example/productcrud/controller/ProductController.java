@@ -115,27 +115,6 @@ public class ProductController {
         return "redirect:/products";
     }
 
-        try {
-            // Validate category belongs to user
-            if (product.getCategory() == null || 
-                !product.getCategory().getUser().getId().equals(currentUser.getId())) {
-                redirectAttributes.addFlashAttribute("errorMessage", "Kategori tidak valid atau bukan milik Anda");
-                return "redirect:/products/new";
-            }
-
-            product.setCreatedBy(currentUser.getUsername());
-            product.setUpdatedBy(currentUser.getUsername());
-            
-            productService.save(product, currentUser);
-            redirectAttributes.addFlashAttribute("successMessage", "Produk berhasil disimpan!");
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/products/new";
-        }
-
-        return "redirect:/products";
-    }
-
     @GetMapping("/products/{id}/edit")
     public String showEditForm(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
         User currentUser = getCurrentUser();
