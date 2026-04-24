@@ -3,24 +3,66 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{fragments/layout :: header}">
 </head>
-<body>
+<body class="bg-gray-50 min-h-screen">
     <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
-    <div class="max-w-7xl mx-auto px-4 py-12">
-        <div class="flex justify-center">
-            <div class="w-full max-w-2xl text-center">
-                <h1 class="text-4xl font-bold mb-4 text-gray-800">Selamat Datang di Product CRUD</h1>
-                <p class="text-lg mb-4 text-gray-600">
-                    Aplikasi manajemen produk sederhana untuk praktikum JPA Fundamentals.
-                    Saat ini data disimpan di dalam memori (ArrayList). Pada praktikum berikutnya,
-                    Anda akan menambahkan JPA untuk menyimpan data ke database.
-                </p>
-                <a th:href="@{/dashboard}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors inline-block">
-                    Lihat Dashboard
-                </a>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="text-center">
+            <!-- Hero Title -->
+            <h1 class="text-5xl font-extrabold text-gray-900 tracking-tight mb-6">
+                Selamat Datang di <span class="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Product</span>CRUD
+            </h1>
+            
+            <!-- Subtitle -->
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto mb-10 leading-relaxed">
+                Aplikasi manajemen produk sederhana untuk praktikum JPA Fundamentals. 
+                Saat ini data disimpan di dalam memori (ArrayList). Pada praktikum berikutnya,
+                Anda akan menambahkan JPA untuk menyimpan data ke database.
+            </p>
+            
+            <!-- CTA Button -->
+            <a th:href="@{/dashboard}" 
+               class="inline-flex items-center px-8 py-4 border border-transparent text-lg font-semibold rounded-xl text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                Lihat Dashboard
+            </a>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center hover:shadow-md transition-shadow">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 mb-4">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Kelola Produk</h3>
+                <p class="text-gray-600 text-sm">Tambah, edit, hapus, dan lihat semua produk Anda dengan mudah.</p>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center hover:shadow-md transition-shadow">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 text-green-600 mb-4">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Status Aktif</h3>
+                <p class="text-gray-600 text-sm">Atur status produk aktif/tidak aktif dengan satu klik.</p>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center hover:shadow-md transition-shadow">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-purple-100 text-purple-600 mb-4">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Katalog Produk</h3>
+                <p class="text-gray-600 text-sm">Lihat katalog semua produk dalam format yang menarik.</p>
             </div>
         </div>
-    </div>
+    </main>
 
     <footer th:replace="~{fragments/layout :: footer}"></footer>
 </body>
