@@ -60,7 +60,7 @@ public class SecurityConfig {
             .formLogin()
                 .loginPage("/auth/login")
                 .loginProcessingUrl("/auth/login")
-                .defaultSuccessUrl("/products", true)
+                .defaultSuccessUrl("/dashboard", true)
                 .failureUrl("/auth/login?error=true")
                 .permitAll()
                 .successHandler(customAuthenticationSuccessHandler)

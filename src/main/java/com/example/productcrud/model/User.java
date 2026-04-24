@@ -18,18 +18,30 @@ public class User {
     @Column(nullable = false, length = 255)
     private String password;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(length = 100)
     private String email;
 
     @Column(length = 100)
     private String fullName;
-
+    
+    @Column(length = 20)
+    private String phoneNumber;
+    
+    @Column(length = 255)
+    private String address;
+    
+    @Column(length = 500)
+    private String bio;
+    
+    @Column(length = 255)
+    private String profileImageUrl;
+    
     @Column(nullable = false)
     private boolean enabled = true;
-
+    
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-
+    
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
@@ -93,6 +105,38 @@ public class User {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 
     public boolean isEnabled() {

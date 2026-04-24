@@ -23,7 +23,7 @@ public class AuthenticatedUserRedirectFilter extends OncePerRequestFilter {
         if (requestURI.equals("/auth/login") || requestURI.equals("/auth/register")) {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal())) {
-                response.sendRedirect("/products");
+                 response.sendRedirect("/dashboard");
                 return;
             }
         }

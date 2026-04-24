@@ -17,9 +17,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                                         Authentication authentication) throws IOException {
         HttpSession session = request.getSession(false);
         if (session != null) {
-            // Tandai bahwa ini login pertama kali, agar kita bisa redirect ke katalog
-            session.setAttribute("SHOW_CATALOG_FIRST", true);
-            response.sendRedirect("/products?catalog=true");
+             // Redirect ke dashboard setelah login
+             response.sendRedirect("/dashboard");
         } else if (authentication != null && authentication.isAuthenticated()) {
             response.sendRedirect("/products?catalog=true");
         } else {
