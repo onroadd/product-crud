@@ -1,66 +1,91 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: header}">
 </head>
-<body>
+<body class="bg-gray-50 min-h-screen">
     <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
-    <main>
-    <div class="max-w-7xl mx-auto px-4 py-6">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">Daftar Kategori</h2>
-            <a href="/categories/new" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition-colors">
-                + Tambah Kategori
-            </a>
-        </div>
-
-        <!-- Flash Messages -->
-        <div th:if="${successMessage}" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4" role="alert">
-            <span th:text="${successMessage}"></span>
-        </div>
-        <div th:if="${errorMessage}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
-            <span th:text="${errorMessage}"></span>
-        </div>
-
-        <!-- Category Table -->
-        <div th:if="${#lists.size(categories) > 0}" class="bg-white shadow rounded overflow-hidden">
-            <table class="w-full">
-                <thead class="bg-gray-800 text-white">
-                    <tr>
-                        <th class="px-4 py-3 text-left">No</th>
-                        <th class="px-4 py-3 text-left">Nama</th>
-                        <th class="px-4 py-3 text-left">Deskripsi</th>
-                        <th class="px-4 py-3 text-left">Tanggal Dibuat</th>
-                        <th class="px-4 py-3 text-left">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="cat, iterStat : ${categories}" class="hover:bg-gray-50 border-b border-gray-200">
-                        <td class="px-4 py-3" th:text="${iterStat.index + 1}">1</td>
-                        <td class="px-4 py-3 font-medium text-gray-800" th:text="${cat.name}">Category Name</td>
-                        <td class="px-4 py-3 text-gray-600" th:text="${cat.description != null ? cat.description : '-'}">-</td>
-                        <td class="px-4 py-3 text-gray-600" th:text="${cat.createdAt}">2026-01-01</td>
-                        <td class="px-4 py-3">
-                            <a th:href="@{/categories/{id}/edit(id=${cat.id})}" class="text-blue-500 hover:text-blue-700 mr-3">Edit</a>
-                            <form th:action="@{/categories/{id}/delete(id=${cat.id})}" method="post" style="display:inline;" 
-                                  onsubmit="return confirm('Hapus kategori ini? Products dengan kategori ini tidak akan terpengaruh.');">
-                                <button type="submit" class="text-red-500 hover:text-red-700">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Empty State -->
-        <div th:if="${#lists.size(categories) == 0}" class="text-center py-10">
-            <p class="text-gray-500 text-lg">Belum ada kategori. Buat kategori pertama Anda!</p>
-            <a href="/categories/new" class="inline-block mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded transition-colors">
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">Daftar Kategori</h1>
+                <p class="text-sm text-gray-600 mt-1">Kelola kategori produk Anda</p>
+            </div>
+            <a th:href="@{/categories/new}" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2.5 rounded-lg shadow-sm transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
                 Tambah Kategori
             </a>
         </div>
-    </div>
+
+        <!-- Alert Messages -->
+        <div th:if="${successMessage}" class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded-r-lg">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <p class="text-green-700 text-sm" th:text="${successMessage}"></p>
+            </div>
+        </div>
+        <div th:if="${errorMessage}" class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <p class="text-red-700 text-sm" th:text="${errorMessage}"></p>
+            </div>
+        </div>
+
+        <!-- Category Table -->
+        <div th:if="${#lists.size(categories) > 0}" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="text-left px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">No</th>
+                            <th class="text-left px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">Nama</th>
+                            <th class="text-left px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">Deskripsi</th>
+                            <th class="text-left px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">Tanggal Dibuat</th>
+                            <th class="text-left px-6 py-4 text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr th:each="cat, iterStat : ${categories}" class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 text-sm text-gray-500" th:text="${iterStat.index + 1}">1</td>
+                            <td class="px-6 py-4 font-medium text-gray-900" th:text="${cat.name}">Category Name</td>
+                            <td class="px-6 py-4 text-sm text-gray-600" th:text="${cat.description != null} ? ${cat.description} : '-'">-</td>
+                            <td class="px-6 py-4 text-sm text-gray-500" th:text="${cat.createdAt}">2026-01-01</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <a th:href="@{/categories/{id}/edit(id=${cat.id})}" class="text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors">Edit</a>
+                                    <button th:onclick="'if(confirm(\'Hapus kategori ini? Produk dengan kategori ini tidak akan terpengaruh.\')) { document.getElementById(\'delete-form-' + ${cat.id} + '\').submit(); }'" 
+                                            class="text-red-600 hover:text-red-800 font-medium text-sm transition-colors bg-transparent border-none cursor-pointer p-0">
+                                        Hapus
+                                    </button>
+                                    <form th:id="'delete-form-' + ${cat.id}" th:action="@{/categories/{id}/delete(id=${cat.id})}" method="post" class="hidden">
+                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div th:if="${#lists.size(categories) == 0}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+            <div class="text-gray-300 text-6xl mb-4">📁</div>
+            <p class="text-gray-500 text-lg mb-2">Belum ada kategori</p>
+            <p class="text-gray-400 text-sm mb-6">Buat kategori pertama Anda untuk mengorganisir produk</p>
+            <a th:href="@{/categories/new}" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3 rounded-lg transition-colors shadow-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Tambah Kategori
+            </a>
+        </div>
     </main>
 
     <footer th:replace="~{fragments/layout :: footer}"></footer>

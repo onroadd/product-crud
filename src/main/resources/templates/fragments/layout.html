@@ -1,125 +1,69 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
-<!-- Header Fragment -->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="header">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title != null ? title : 'Product CRUD'}">Product CRUD</title>
+    <title th:text="${pageTitle ?: 'Product CRUD'}">Product CRUD</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#3b82f6',
-                        secondary: '#8b5cf6',
-                    }
-                }
-            }
-        }
-    </script>
-    <link th:href="@{/css/style.css}" rel="stylesheet">
 </head>
+<body class="bg-gray-50 min-h-screen">
 
-<!-- Navbar Fragment -->
-<nav th:fragment="navbar" class="bg-gray-800 text-white mb-4">
-    <div class="max-w-7xl mx-auto px-4">
-        <div class="flex justify-between items-center h-16">
-            <!-- Logo -->
-            <a class="text-xl font-bold text-white flex items-center" th:href="@{/}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                </svg>
-                Product CRUD
-            </a>
-
-            <!-- Desktop Navigation -->
-            <div class="hidden md:flex items-center space-x-6">
-                <a class="text-white hover:text-gray-300 transition-colors" th:href="@{/}">Home</a>
-                <a class="text-white hover:text-gray-300 transition-colors" th:href="@{/products}">Products</a>
-                <a class="text-white hover:text-gray-300 transition-colors" th:href="@{/categories}">Categories</a>
-            </div>
-
-            <!-- Desktop Auth -->
-            <div class="hidden md:flex items-center space-x-4">
-                <div sec:authorize="isAuthenticated()" class="relative">
-                    <button class="text-white hover:text-gray-300 flex items-center" id="dropdownButton">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        <span sec:authentication="name"></span>
-                    </button>
-                    <div id="dropdownMenu" class="absolute right-0 mt-2 bg-white text-gray-800 border rounded shadow-lg hidden z-10">
-                        <form th:action="@{/logout}" method="post" class="p-2">
-                            <button type="submit" class="text-red-600 hover:text-red-800 w-full text-left px-3 py-2 rounded transition-colors">
-                                Logout
-                            </button>
-                        </form>
-                    </div>
+    <nav th:fragment="navbar" class="bg-gray-800 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <a th:href="@{/dashboard}" class="text-xl font-bold text-white hover:text-gray-200">ProductCRUD</a>
+                
+                 <div class="hidden md:flex items-center space-x-1 border border-white/20 rounded-lg p-1">
+                 <a th:href="@{/dashboard}" 
+                    class="px-4 py-1.5 rounded-md text-sm font-medium transition-colors"
+                    th:classappend="${#httpServletRequest.requestURI == '/dashboard'} ? 'bg-white text-gray-900' : 'text-gray-300 hover:bg-white/10'">
+                     Dashboard
+                 </a>
+                 <a th:href="@{/products(catalog=true)}" 
+                    class="px-4 py-1.5 rounded-md text-sm font-medium transition-colors"
+                    th:classappend="${param.catalog != null and param.catalog[0] == 'true'} ? 'bg-white text-gray-900' : 'text-gray-300 hover:bg-white/10'">
+                     Katalog
+                 </a>
+                 <!-- Produk Saya (CRUD) -->
+                 <a th:href="@{/products}" 
+                    class="px-4 py-1.5 rounded-md text-sm font-medium transition-colors"
+                    th:classappend="${param.catalog == null or param.catalog[0] == 'false'} ? 'bg-white text-gray-900' : 'text-gray-300 hover:bg-white/10'">
+                     Produk Saya
+                 </a>
+                     <div class="w-px h-6 bg-white/20 mx-1"></div>
+                    <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <button type="submit" class="text-gray-300 hover:text-white text-sm font-medium px-2 transition-colors">
+                            Logout
+                        </button>
+                    </form>
                 </div>
-                <a sec:authorize="!isAuthenticated()" class="border border-white px-3 py-1 text-sm rounded hover:bg-white hover:text-gray-800 transition-all" th:href="@{/auth/login}">Login</a>
-            </div>
 
-            <!-- Mobile Menu Button -->
-            <button id="mobileMenuButton" class="md:hidden text-white focus:outline-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>
+                <button id="mobileMenuButton" class="md:hidden text-gray-700 focus:outline-none">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
         </div>
 
-        <!-- Mobile Menu -->
-        <div id="mobileMenu" class="md:hidden hidden bg-gray-700 rounded-lg mt-2 p-4">
-            <div class="flex flex-col space-y-3">
-                <a class="text-white hover:text-gray-300 py-2" th:href="@{/}">Home</a>
-                <a class="text-white hover:text-gray-300 py-2" th:href="@{/products}">Products</a>
-                <a class="text-white hover:text-gray-300 py-2" th:href="@{/categories}">Categories</a>
-                <div class="border-t border-gray-600 pt-2 mt-2">
-                    <div sec:authorize="isAuthenticated()">
-                        <p class="text-gray-300 text-sm mb-2">Login sebagai: <span sec:authentication="name" class="text-white font-semibold"></span></p>
-                        <form th:action="@{/logout}" method="post">
-                            <button type="submit" class="text-red-400 hover:text-red-300 w-full text-left py-2">Logout</button>
-                        </form>
-                    </div>
-                    <a sec:authorize="!isAuthenticated()" class="block border border-white text-white px-3 py-2 text-center rounded hover:bg-white hover:text-gray-800 transition-all mt-2" th:href="@{/auth/login}">Login</a>
-                </div>
+        <div id="mobileMenu" class="md:hidden hidden border-t border-gray-700">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a th:href="@{/products(catalog=true)}" class="block px-3 py-2 rounded-md text-base text-gray-300 hover:bg-gray-700 hover:text-white">Katalog</a>
+                <a th:href="@{/products}" class="block px-3 py-2 rounded-md text-base text-gray-300 hover:bg-gray-700 hover:text-white">Produk Saya</a>
+                <form th:action="@{/logout}" method="post" class="px-3 py-2">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <button type="submit" class="text-red-400 w-full text-left">Logout</button>
+                </form>
             </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<!-- Footer Fragment -->
-<footer th:fragment="footer" class="bg-gray-800 text-white py-6 mt-auto">
-    <div class="max-w-7xl mx-auto px-4 text-center">
-        <p class="text-gray-300">Product CRUD - Praktikum JPA Fundamentals - 2026</p>
-    </div>
-</footer>
+    <footer th:fragment="footer" class="bg-gray-800 text-white mt-auto">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+            <p class="text-center text-gray-400 text-sm">© 2026 ProductCRUD. All rights reserved.</p>
+        </div>
+    </footer>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const dropdownButton = document.getElementById('dropdownButton');
-    const dropdownMenu = document.getElementById('dropdownMenu');
-    const mobileMenuButton = document.getElementById('mobileMenuButton');
-    const mobileMenu = document.getElementById('mobileMenu');
-
-    if (dropdownButton && dropdownMenu) {
-        dropdownButton.addEventListener('click', function(e) {
-            e.stopPropagation();
-            dropdownMenu.classList.toggle('hidden');
-        });
-        document.addEventListener('click', function() {
-            dropdownMenu.classList.add('hidden');
-        });
-    }
-
-    if (mobileMenuButton && mobileMenu) {
-        mobileMenuButton.addEventListener('click', function() {
-            mobileMenu.classList.toggle('hidden');
-        });
-    }
-});
-</script>
-
+</body>
 </html>
