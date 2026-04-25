@@ -1,11 +1,13 @@
 package com.example.productcrud.controller;
 
+import com.example.productcrud.dto.ChangePasswordDTO;
 import com.example.productcrud.model.User;
 import com.example.productcrud.repository.UserRepository;
 import com.example.productcrud.service.CustomUserDetails;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +22,11 @@ import java.util.Base64;
 public class ProfileController {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public ProfileController(UserRepository userRepository) {
+    public ProfileController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // Helper method to get the current logged-in user
@@ -49,6 +53,59 @@ public class ProfileController {
         model.addAttribute("user", currentUser);
         model.addAttribute("pageTitle", "Profile");
         return "profile/view-profile";
+    }
+
+    // Show change password form
+    @GetMapping("/change-password")
+    public String showChangePasswordForm(Model model) {
+        User currentUser = getCurrentUser();
+        if (currentUser == null) {
+            return "redirect:/auth/login";
+        }
+        model.addAttribute("changePasswordDTO", new ChangePasswordDTO());
+        model.addAttribute("pageTitle", "Change Password");
+        return "profile/change-password";
+    }
+
+    // Handle change password form submission
+    @PostMapping("/change-password")
+    public String changePassword(@ModelAttribute ChangePasswordDTO changePasswordDTO,
+                                 RedirectAttributes redirectAttributes) {
+        User currentUser = getCurrentUser();
+        if (currentUser == null) {
+            return "redirect:/auth/login";
+        }
+
+        // Validate old password
+        if (!passwordEncoder.matches(changePasswordDTO.getOldPassword(), currentUser.getPassword())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Password lama tidak sesuai!");
+            return "redirect:/profile/change-password";
+        }
+
+        // Validate new password match
+        if (!changePasswordDTO.getNewPassword().equals(changePasswordDTO.getConfirmNewPassword())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Password baru dan konfirmasi password tidak cocok!");
+            return "redirect:/profile/change-password";
+        }
+
+        // Validate minimum length
+        if (changePasswordDTO.getNewPassword().length() < 6) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Password minimal 6 karakter!");
+            return "redirect:/profile/change-password";
+        }
+
+        // Encode and save new password
+        currentUser.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+        userRepository.save(currentUser);
+
+        // Update authentication principal
+        CustomUserDetails updatedUserDetails = new CustomUserDetails(currentUser);
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                updatedUserDetails, null, updatedUserDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Password berhasil diubah!");
+        return "redirect:/profile";
     }
 
     // Show edit profile form
