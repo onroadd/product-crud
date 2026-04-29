@@ -3,7 +3,7 @@ package com.example.productcrud.controller;
 import com.example.productcrud.model.Category;
 import com.example.productcrud.model.User;
 import com.example.productcrud.service.CategoryService;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;

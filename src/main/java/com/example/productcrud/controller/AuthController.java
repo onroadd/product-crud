@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Arrays;
 
 @Controller
 public class AuthController {
@@ -60,26 +60,31 @@ public class AuthController {
                           Model model,
                           RedirectAttributes redirectAttributes) {
         
+        // Check if passwords match
         if (!password.equals(confirmPassword)) {
             model.addAttribute("errorMessage", "Password dan konfirmasi password tidak cocok!");
             return "register";
         }
 
+        // Check if password is too short
         if (password.length() < 6) {
             model.addAttribute("errorMessage", "Password minimal 6 karakter!");
             return "register";
         }
 
+        // Check if username already exists
         if (userRepository.existsByUsername(username)) {
             model.addAttribute("errorMessage", "Username sudah digunakan!");
             return "register";
         }
 
+        // Check if email already exists
         if (userRepository.existsByEmail(email)) {
             model.addAttribute("errorMessage", "Email sudah digunakan!");
             return "register";
         }
 
+        // Create new user
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
@@ -90,7 +95,7 @@ public class AuthController {
         userRepository.save(user);
         System.out.println("User registered: " + username);
 
-        // BUAT KATEGORI DEFAULT SAJA (TIDAK MENGISI PRODUK LAGI)
+        // Create default categories for new user
         String[] defaultCategories = {"Elektronik", "Buku", "Makanan", "Pakaian"};
         Category[] savedCategories = new Category[4];
         
@@ -103,15 +108,15 @@ public class AuthController {
             savedCategories[i] = cat;
         }
         System.out.println("Default categories created for user: " + username);
-        System.out.println("Default categories created for user: " + username);
 
+        // Create sample products for new user
         try {
             Product product1 = new Product();
             product1.setName("Contoh Laptop");
             product1.setDescription("Laptop contoh untuk kategori Elektronik");
             product1.setPrice(10000000);
             product1.setStock(5);
-            product1.setCategory(savedCategories[0]);
+            product1.setCategory(savedCategories[0]); // Elektronik
             product1.setActive(true);
             product1.setCreatedAt(LocalDate.now());
             product1.setCreatedBy(username);
@@ -123,7 +128,7 @@ public class AuthController {
             product2.setDescription("Buku contoh untuk kategori Buku");
             product2.setPrice(50000);
             product2.setStock(20);
-            product2.setCategory(savedCategories[1]);
+            product2.setCategory(savedCategories[1]); // Buku
             product2.setActive(true);
             product2.setCreatedAt(LocalDate.now());
             product2.setCreatedBy(username);
@@ -135,7 +140,7 @@ public class AuthController {
             product3.setDescription("Makanan contoh untuk kategori Makanan");
             product3.setPrice(25000);
             product3.setStock(50);
-            product3.setCategory(savedCategories[2]);
+            product3.setCategory(savedCategories[2]); // Makanan
             product3.setActive(true);
             product3.setCreatedAt(LocalDate.now());
             product3.setCreatedBy(username);
@@ -147,7 +152,7 @@ public class AuthController {
             product4.setDescription("Pakaian contoh untuk kategori Pakaian");
             product4.setPrice(150000);
             product4.setStock(15);
-            product4.setCategory(savedCategories[3]);
+            product4.setCategory(savedCategories[3]); // Pakaian
             product4.setActive(true);
             product4.setCreatedAt(LocalDate.now());
             product4.setCreatedBy(username);

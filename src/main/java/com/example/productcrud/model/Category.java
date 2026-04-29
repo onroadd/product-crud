@@ -4,13 +4,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "categories", 
-        uniqueConstraints = {
-            @UniqueConstraint(columnNames = { "name", "user_id" })
-        })
+       uniqueConstraints = {
+           @UniqueConstraint(columnNames = { "name", "user_id" })
+       })
 public class Category {
 
     @Id
@@ -23,10 +23,12 @@ public class Category {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    // Relationship: Many categories belong to one user
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    // One category can have many products
     @OneToMany(mappedBy = "category", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<>();
 
@@ -56,6 +58,7 @@ public class Category {
         this.user = user;
     }
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -112,11 +115,13 @@ public class Category {
         this.products = products;
     }
 
+    // Helper method to add product to this category
     public void addProduct(Product product) {
         products.add(product);
         product.setCategory(this);
     }
 
+    // Helper method to remove product from this category
     public void removeProduct(Product product) {
         products.remove(product);
         product.setCategory(null);
