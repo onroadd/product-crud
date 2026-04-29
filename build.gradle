@@ -1,14 +1,15 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.5.5'
-    id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.springframework.boot' version '2.7.18'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    sourceCompatibility = '17'
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
 }
 
 repositories {
@@ -20,14 +21,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 
     // JPA & PostgreSQL
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'org.postgresql:postgresql'
 
-    // Load .env file
-    implementation 'me.paulschwarz:spring-dotenv:4.0.0'
+    // Load .env file (removed - requires Java 11+)
+    // implementation 'me.paulschwarz:spring-dotenv:4.0.0'
 
     // Swagger/OpenAPI UI (commented - version compatibility issue)
     // implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
@@ -38,4 +39,32 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+// Kill process on port 8080 before running bootRun
+tasks.named('bootRun').configure {
+    doFirst {
+        try {
+            def isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
+            if (isWindows) {
+                def output = "cmd /c netstat -ano | findstr :8080".execute().text
+                output.eachLine { line ->
+                    def parts = line.trim().split(/\s+/)
+                    if (parts.length > 4) {
+                        def pid = parts[4]
+                        if (pid && pid != '0') {
+                            try {
+                                "cmd /c taskkill /PID ${pid} /F".execute()
+                                println "Killed process ${pid} on port 8080"
+                            } catch (Exception e) {
+                                // Ignore
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Ignore if no process found
+        }
+    }
 }

@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "products")
@@ -17,10 +17,13 @@ public class Product {
     @Column(nullable = false, length = 200)
     private String name;
 
-    // Many-to-one relationship with Category (entity, not enum)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    public Product() {
+        this.category = new Category();
+    }
 
     private long price;
 
@@ -34,18 +37,14 @@ public class Product {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate createdAt;
 
-    // Field untuk tracking siapa yang melakukan operasi CRUD
     @Column(length = 50)
     private String createdBy;
 
     @Column(length = 50)
     private String updatedBy;
 
-    public Product() {
-    }
-
     public Product(Long id, String name, Category category, long price, int stock,
-                   String description, boolean active, LocalDate createdAt) {
+                      String description, boolean active, LocalDate createdAt) {
         this.id = id;
         this.name = name;
         this.category = category;
@@ -54,6 +53,21 @@ public class Product {
         this.description = description;
         this.active = active;
         this.createdAt = createdAt;
+    }
+
+    public Product(Long id, String name, Category category, long price, int stock,
+                      String description, boolean active, LocalDate createdAt,
+                      String createdBy, String updatedBy) {
+        this.id = id;
+        this.name = name;
+        this.category = category;
+        this.price = price;
+        this.stock = stock;
+        this.description = description;
+        this.active = active;
+        this.createdAt = createdAt;
+        this.createdBy = createdBy;
+        this.updatedBy = updatedBy;
     }
 
     public Long getId() {
@@ -120,7 +134,6 @@ public class Product {
         this.createdAt = createdAt;
     }
 
-    // Getter dan Setter untuk createdBy
     public String getCreatedBy() {
         return createdBy;
     }
@@ -129,12 +142,20 @@ public class Product {
         this.createdBy = createdBy;
     }
 
-    // Getter dan Setter untuk updatedBy
     public String getUpdatedBy() {
         return updatedBy;
     }
 
     public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", category=" + category +
+                '}';
     }
 }

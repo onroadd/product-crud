@@ -50,34 +50,33 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/login", "/auth/register", "/auth/logout", "/css/**", "/js/**", "/images/**").permitAll()
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-resources/**", "/webjars/**").permitAll()
-                .requestMatchers("/products/new", "/products/*/edit", "/products/*/delete", "/products/save").authenticated()
+            .authorizeRequests()
+                .antMatchers("/auth/login", "/auth/register", "/auth/logout", "/css/**", "/js/**", "/images/**").permitAll()
+                .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-resources/**", "/webjars/**").permitAll()
+                .antMatchers("/products/new", "/products/*/edit", "/products/*/delete", "/products/save").authenticated()
                 .anyRequest().authenticated()
-            )
+                .and()
             .addFilterBefore(authenticatedUserRedirectFilter, UsernamePasswordAuthenticationFilter.class)
-            .formLogin(form -> form
+            .formLogin()
                 .loginPage("/auth/login")
                 .loginProcessingUrl("/auth/login")
                 .defaultSuccessUrl("/products", true)
                 .failureUrl("/auth/login?error=true")
                 .permitAll()
                 .successHandler(customAuthenticationSuccessHandler)
-            )
-            .logout(logout -> logout
+                .and()
+            .logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/auth/login?logout=true")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .permitAll()
-            )
-            .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/h2-console/**")
-            )
-            .headers(headers -> headers
-                .frameOptions(frame -> frame.sameOrigin())
-            );
+                .and()
+            .csrf()
+                .ignoringAntMatchers("/h2-console/**")
+                .and()
+            .headers()
+                .frameOptions().sameOrigin();
 
         return http.build();
     }
